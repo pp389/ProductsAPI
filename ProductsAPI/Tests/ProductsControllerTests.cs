@@ -61,7 +61,6 @@ namespace ProductAPI.Tests
         {
             var product = new Product { Id = 1, Name = "TestProduct", Price = 100 };
 
-            // Poprawne zwrócenie krotki (Success, Product, Error)
             _productServiceMock.Setup(s => s.AddProductAsync(It.IsAny<Product>()))
                                .ReturnsAsync((true, product, null));
 
@@ -78,7 +77,6 @@ namespace ProductAPI.Tests
         {
             var product = new Product { Id = 1, Name = "UpdatedProduct", Price = 200 };
 
-            // Poprawne zwrócenie krotki (Success, UpdatedProduct, Error)
             _productServiceMock.Setup(s => s.UpdateProductAsync(product))
                                .ReturnsAsync((true, product, null));
 
@@ -94,7 +92,6 @@ namespace ProductAPI.Tests
         {
             var product = new Product { Id = 1, Name = "UpdatedProduct", Price = 200 };
 
-            // Poprawione Setup(), aby zwracało poprawny typ krotki
             _productServiceMock.Setup(s => s.UpdateProductAsync(It.IsAny<Product>()))
                                .ReturnsAsync((false, null, "Product not found"));
 
@@ -109,7 +106,7 @@ namespace ProductAPI.Tests
         public async Task DeleteProduct_ReturnsNoContent_WhenProductExists()
         {
             _productServiceMock.Setup(s => s.DeleteProductAsync(1))
-                               .ReturnsAsync((true, null)); // Sukces, brak błędu
+                               .ReturnsAsync((true, null));
 
             var result = await _controller.DeleteProduct(1);
 
@@ -120,7 +117,7 @@ namespace ProductAPI.Tests
         public async Task DeleteProduct_ReturnsNotFound_WhenProductDoesNotExist()
         {
             _productServiceMock.Setup(s => s.DeleteProductAsync(1))
-                               .ReturnsAsync((false, "Product not found")); // Nie znaleziono produktu
+                               .ReturnsAsync((false, "Product not found"));
 
             var result = await _controller.DeleteProduct(1);
 
@@ -139,7 +136,7 @@ namespace ProductAPI.Tests
 
             var result = await _controller.GetProductHistory(1);
 
-            var actionResult = Assert.IsType<OkObjectResult>(result); // Bez `.Result`
+            var actionResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<List<ProductHistory>>(actionResult.Value);
             Assert.Single(returnValue);
         }
