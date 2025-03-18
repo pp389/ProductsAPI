@@ -6,8 +6,9 @@ namespace ProductAPI.Models
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public string ChangeType { get; set; }
-        public DateTime ChangeDate { get; set; }
-        public string Details { get; set; }
+        public string PropertyName { get; set; } // np. "Price", "Stock", "Name"
+        public string OldValue { get; set; }
+        public string NewValue { get; set; }
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

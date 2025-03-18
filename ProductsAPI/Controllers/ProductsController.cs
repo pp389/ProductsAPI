@@ -11,6 +11,7 @@ namespace ProductAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IProductHistoryService _historyService;
 
         public ProductsController(IProductService productService)
         {
@@ -57,5 +58,13 @@ namespace ProductAPI.Controllers
             if (!success) return NotFound(error);
             return NoContent();
         }
+
+        [HttpGet("{id}/history")]
+        public async Task<IActionResult> GetProductHistory(int id)
+        {
+            var history = await _historyService.GetProductHistoryAsync(id);
+            return Ok(history);
+        }
+
     }
 }

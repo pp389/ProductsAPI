@@ -20,7 +20,7 @@ namespace ProductAPI.Services
         {
             return await _context.ProductHistories
                 .Where(h => h.ProductId == productId)
-                .OrderByDescending(h => h.ChangeDate)
+                .OrderByDescending(h => h.Timestamp)
                 .ToListAsync();
         }
 
