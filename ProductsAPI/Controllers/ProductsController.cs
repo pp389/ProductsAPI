@@ -47,7 +47,7 @@ namespace ProductAPI.Controllers
             if (id != product.Id) return BadRequest();
 
             var (success, updatedProduct, error) = await _productService.UpdateProductAsync(product);
-            if (!success) return BadRequest(error);
+            if (!success) return NotFound(error);
 
             return NoContent();
         }
