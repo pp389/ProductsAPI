@@ -8,17 +8,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Dodanie bazy danych
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IProductHistoryService, ProductHistoryService>();
 
-// Rejestrowanie serwisów
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddSingleton<IForbiddenWordsService, ForbiddenWordsService>();
 
 var app = builder.Build();
 
-// Middleware
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseAuthorization();

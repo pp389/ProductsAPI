@@ -11,11 +11,13 @@ namespace ProductAPI.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IProductHistoryService _historyService;
+        private readonly IForbiddenWordsService _forbiddenWordsService;
 
-        public ProductService(ApplicationDbContext context)
+        public ProductService(ApplicationDbContext context, IProductHistoryService historyService, IForbiddenWordsService forbiddenWordsService)
         {
             _context = context;
-            _historyService = new ProductHistoryService(context);
+            _historyService = historyService;
+            _forbiddenWordsService = forbiddenWordsService;
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync() => await _context.Products.ToListAsync();
@@ -24,6 +26,9 @@ namespace ProductAPI.Services
 
         public async Task<(bool, Product, string)> AddProductAsync(Product product)
         {
+            if (await _forbiddenWordsService.IsForbiddenAsync(product.Name))
+                return (false, null, "Nazwa produktu zawiera zabronione słowa.");
+
             if (await _context.Products.AnyAsync(p => p.Name == product.Name))
                 return (false, null, "Produkt o tej nazwie już istnieje.");
 
@@ -34,6 +39,9 @@ namespace ProductAPI.Services
 
         public async Task<(bool, Product, string)> UpdateProductAsync(Product product)
         {
+            if (await _forbiddenWordsService.IsForbiddenAsync(product.Name))
+                return (false, null, "Nazwa produktu zawiera zabronione słowa.");
+
             var existingProduct = await _context.Products.FindAsync(product.Id);
             if (existingProduct == null) return (false, null, "Produkt nie istnieje.");
 
@@ -58,7 +66,7 @@ namespace ProductAPI.Services
 
         private async Task TrackProductChangeAsync(int productId, string property, string oldValue, string newValue)
         {
-            if (oldValue != newValue) // Zapisywanie tylko, jeśli wartość się zmieniła
+            if (oldValue != newValue)
             {
                 var history = new ProductHistory
                 {
