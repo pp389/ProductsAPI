@@ -15,6 +15,7 @@ namespace ProductAPI.Services
         public ProductService(ApplicationDbContext context)
         {
             _context = context;
+            _historyService = new ProductHistoryService(context);
         }
 
         public async Task<IEnumerable<Product>> GetProductsAsync() => await _context.Products.ToListAsync();

@@ -12,12 +12,14 @@ namespace ProductAPI.Tests
     public class ProductsControllerTests
     {
         private readonly Mock<IProductService> _productServiceMock;
+        private readonly Mock<IProductHistoryService> _productHistoryServiceMock;
         private readonly ProductsController _controller;
 
         public ProductsControllerTests()
         {
             _productServiceMock = new Mock<IProductService>();
-            _controller = new ProductsController(_productServiceMock.Object);
+            _productHistoryServiceMock = new Mock<IProductHistoryService>();
+            _controller = new ProductsController(_productServiceMock.Object, _productHistoryServiceMock.Object);
         }
 
         [Fact]

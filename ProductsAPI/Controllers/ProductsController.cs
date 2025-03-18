@@ -13,9 +13,10 @@ namespace ProductAPI.Controllers
         private readonly IProductService _productService;
         private readonly IProductHistoryService _historyService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IProductHistoryService historyService)
         {
             _productService = productService;
+            _historyService = historyService;
         }
 
         [HttpGet]
